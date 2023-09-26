@@ -26,11 +26,12 @@ internal struct YAxisGrid<T>: ViewModifier where T: CTLineBarChartDataProtocol {
                         if index != 0 {
                             HorizontalGridView(chartData: chartData)
                             Spacer()
-                                .frame(minHeight: 0, maxHeight: 500)
+                                .frame(minHeight: 0, maxHeight: 25)
                         }
                     }
                     HorizontalGridView(chartData: chartData)
                 }
+                .offset(y: -20)
                 content
             } else { content }
         }
