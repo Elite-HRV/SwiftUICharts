@@ -271,24 +271,31 @@ extension Path {
         let x: CGFloat = rect.width / CGFloat(dataPoints.count - 1)
         let y: CGFloat = rect.height / CGFloat(range)
         var path = Path()
+        var subpathIsClosed: Bool = true
         
         if dataPoints.count >= 2 {
             
-            findFirst: for index in 0 ..< dataPoints.count {
-                if dataPoints[index].value != 0 {
-                    let firstPoint = CGPoint(x: CGFloat(index) * x,
-                                             y: (CGFloat(dataPoints[index].value - minValue) * -y) + rect.height)
-                    path.move(to: firstPoint)
-                    break findFirst
-                }
-            }
+//            findFirst: for index in 0 ..< dataPoints.count {
+//                if dataPoints[index].value > 0 {
+//                    let firstPoint = CGPoint(x: CGFloat(index) * x,
+//                                             y: (CGFloat(dataPoints[index].value - minValue) * -y) + rect.height)
+//                    path.move(to: firstPoint)
+//                    break findFirst
+//                }
+//            }
             
-            for index in 1 ..< dataPoints.count {
+            for index in 0 ..< dataPoints.count {
                 let nextPoint = CGPoint(x: CGFloat(index) * x,
                                         y: (CGFloat(dataPoints[index].value - minValue) * -y) + rect.height)
-                
-                if dataPoints[index].value != 0 && !dataPoints[index].ignoreMe {
-                    path.addLine(to: nextPoint)
+                if dataPoints[index].value > 0 && !dataPoints[index].ignoreMe {
+                    if !subpathIsClosed && !path.contains(nextPoint) {
+                        path.addLine(to: nextPoint)
+                    } else {
+                        path.move(to: nextPoint)
+                        subpathIsClosed = false
+                    }
+                } else {
+                    subpathIsClosed = true
                 }
             }
             if isFilled {
@@ -297,6 +304,7 @@ extension Path {
                 path.closeSubpath()
             }
         }
+        
         return path
     }
     

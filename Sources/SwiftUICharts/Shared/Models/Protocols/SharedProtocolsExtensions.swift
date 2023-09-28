@@ -278,11 +278,12 @@ extension CTSingleDataSetProtocol where Self.DataPoint: CTStandardDataPointProto
         if !self.style.ignoreZero {
             return self.dataPoints
                 .map(\.value)
+                .filter({ $0 > 0 })
                 .min() ?? 0
         } else {
             return self.dataPoints
                 .map(\.value)
-                .filter({ $0 != 0 })
+                .filter({ $0 > 0 })
                 .min() ?? 0
         }
     }

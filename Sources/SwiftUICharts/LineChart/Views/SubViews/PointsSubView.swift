@@ -46,21 +46,23 @@ internal struct PointsSubView<DS>: View where DS: CTLineChartDataSet,
         switch dataSets.pointStyle.pointType {
         case .filled:
             ForEach(startIndex..<dataSets.dataPoints.count, id: \.self) { index in
-                Point(value: dataSets.dataPoints[index].value,
-                       index: index,
-                       minValue: minValue,
-                       range: range,
-                       datapointCount: dataSets.dataPoints.count,
-                       pointSize: dataSets.pointStyle.pointSize,
-                       ignoreZero: dataSets.style.ignoreZero,
-                       pointStyle: dataSets.pointStyle.pointShape)
-                    .ifElse(!isFilled, if: {
-                        $0.trim(to: animationValue)
-                            .fill(dataSets.dataPoints[index].pointColour?.fill ?? dataSets.pointStyle.fillColour)
-                    }, else: {
-                        $0.scale(y: animationValue, anchor: .bottom)
-                            .fill(dataSets.dataPoints[index].pointColour?.fill ?? dataSets.pointStyle.fillColour)
-                    })
+                if dataSets.dataPoints[index].value > 0 {
+                    Point(value: dataSets.dataPoints[index].value,
+                           index: index,
+                           minValue: minValue,
+                           range: range,
+                           datapointCount: dataSets.dataPoints.count,
+                           pointSize: dataSets.pointStyle.pointSize,
+                           ignoreZero: dataSets.style.ignoreZero,
+                           pointStyle: dataSets.pointStyle.pointShape)
+                        .ifElse(!isFilled, if: {
+                            $0.trim(to: animationValue)
+                                .fill(dataSets.dataPoints[index].pointColour?.fill ?? dataSets.pointStyle.fillColour)
+                        }, else: {
+                            $0.scale(y: animationValue, anchor: .bottom)
+                                .fill(dataSets.dataPoints[index].pointColour?.fill ?? dataSets.pointStyle.fillColour)
+                        })
+                }
             }
             .animateOnAppear(disabled: disableAnimation, using: animation) {
                 self.startAnimation = true

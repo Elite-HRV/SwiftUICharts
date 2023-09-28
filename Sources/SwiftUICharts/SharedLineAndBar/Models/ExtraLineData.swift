@@ -73,7 +73,6 @@ public struct ExtraLineData: Identifiable {
             case .zero:
                 _lowestValue = 0
             }
-            
             switch self.style.topLine {
             case .maximumValue:
                 _highestValue = self.getMaxValue()
